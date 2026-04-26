@@ -6,11 +6,13 @@
 
 ## Form
 
-The plugin should be implemented as a single Bash script.
+Keep the battery rendering logic in a single Bash runtime script.
 
-It must support both usage modes:
+TPM integration may use a minimal tmux wrapper file that only wires tmux loading to that script surface.
 
-- run directly as a script
+The plugin must support both usage modes:
+
+- run the Bash script directly
 - install through tmux plugin manager
 
 ## Compatibility
