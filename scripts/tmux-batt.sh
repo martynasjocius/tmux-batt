@@ -5,9 +5,33 @@ set -u
 readonly PLACEHOLDER_OUTPUT="B --"
 readonly DEFAULT_POWER_SUPPLY_ROOT="/sys/class/power_supply"
 readonly DEFAULT_PMSET_CMD="pmset -g batt"
+readonly INSTALL_FLAG="--install"
+readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly SCRIPT_PATH="$SCRIPT_DIR/$(basename "${BASH_SOURCE[0]}")"
 
 command_exists() {
   command -v "$1" >/dev/null 2>&1
+}
+
+install_segment() {
+  local segment_command
+  local status_right
+
+  segment_command="#($SCRIPT_PATH)"
+  status_right="$(tmux show-option -gqv status-right)"
+
+  case "$status_right" in
+    *"$segment_command"*)
+      return 0
+      ;;
+  esac
+
+  if [ -n "$status_right" ]; then
+    tmux set-option -gq status-right "$status_right $segment_command"
+    return 0
+  fi
+
+  tmux set-option -gq status-right "$segment_command"
 }
 
 is_non_negative_integer() {
@@ -161,6 +185,11 @@ macos_segment() {
 }
 
 main() {
+  if [ "${1-}" = "$INSTALL_FLAG" ]; then
+    install_segment
+    return 0
+  fi
+
   local platform
 
   platform="${TMUX_BATT_PLATFORM:-$(uname -s 2>/dev/null || printf 'unknown')}"
