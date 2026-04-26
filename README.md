@@ -1,53 +1,42 @@
 # tmux-batt
 
-Minimal tmux battery status for the status line.
+Minimal battery status for the tmux status line.
 
-`tmux-batt` is a small tmux plugin that shows laptop battery state at a glance with as little visual noise as possible. It is designed to feel native to a tmux status line rather than like a separate dashboard.
+`tmux-batt` is a small tmux plugin for showing laptop battery state in a compact status segment. It is intended to fit naturally into an existing tmux status line without extra decoration.
 
-## Target Output
+## Output
 
-The plugin should render a compact battery segment with:
+The segment shows:
 
 - a battery icon
 - battery percentage
 - current power draw in watts, when available
 
-Example outputs:
+Example output:
 
 - `B 40% 7W`
 - `B 100%`
 - `B 58% 25W`
 
-`B` is a placeholder for the final battery icon. Charging should use a charging icon, discharging should use the regular battery icon, and wattage should be omitted when the platform does not expose it.
+`B` is a placeholder for the final battery icon. Charging and discharging use different icons. Wattage is omitted when the platform does not expose it.
 
 ## Platforms
-
-First release target:
 
 - Linux
 - macOS
 
-## What Good Looks Like
+## Usage
 
-A good `tmux-batt` status segment is:
+Run the script directly:
 
-- readable in one glance
-- compact enough to fit naturally into an existing tmux status line
-- quiet by default, with no extra labels or decoration
-- clear about charging vs. discharging state
-- color-coded by battery level
+```bash
+./scripts/tmux-batt.sh
+```
 
-Battery level colors:
+Install with TPM by adding this plugin to your tmux plugin list:
 
-- `>= 50%`: light pastel green
-- `20% to 49%`: yellow
-- `< 20%`: red
+```tmux
+set -g @plugin 'martynasjocius/tmux-batt'
+```
 
-## Non-Goals For v1
-
-This first release does not try to be:
-
-- a full power management tool
-- an interactive tmux widget
-- a cross-desktop battery dashboard
-- a plugin with heavy theming or deep configuration surface
+The TPM entry loads [tmux-batt.tmux](/home/mjoc/Projects/tmux-batt/tmux-batt.tmux), which appends the battery segment to `status-right`.
